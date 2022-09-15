@@ -3,9 +3,9 @@ class Alkane:
         self.carbon_count = carbons
         self.cyclic = cyclic if carbons > 2 else False
 
-    def draw(self) -> str:
+    def get_chains(self) -> list[str]:
         if self.carbon_count == 1:
-            return 'CH4'
+            return ['CH4']
 
         chains = ['C' for i in range(self.carbon_count)]
         for i in range(self.carbon_count):
@@ -14,7 +14,7 @@ class Alkane:
             else:
                 chains[i] += 'H2'
 
-        return '-'.join(chains)
+        return chains
 
     def parse_to_atoms(self) -> dict[str, int]:
         return {'C': self.carbon_count, 'H': self.carbon_count * 2 + 2}
@@ -29,7 +29,7 @@ class Alkene:
         if carbons < 2:
             self.carbon_count = 2
 
-    def draw(self) -> str:
+    def get_chains(self) -> list[str]:
         chains = ['C' for i in range(self.carbon_count)]
 
         for i in range(self.carbon_count):
@@ -52,7 +52,7 @@ class Alkene:
         chains[self.isomer - 1] += '=' + chains[self.isomer]
         chains.pop(self.isomer)
 
-        return '-'.join(chains)    
+        return chains
 
     def parse_to_atoms(self) -> dict[str, int]:
         return {'C': self.carbon_count, 'H': self.carbon_count * 2}
@@ -67,7 +67,7 @@ class Alkyne:
         if carbons < 2:
             self.carbon_count = 2
             
-    def draw(self) -> str:
+    def get_chains(self) -> list[str]:
         chains = ['C' for i in range(self.carbon_count)]
 
         for i in range(self.carbon_count):
@@ -89,7 +89,21 @@ class Alkyne:
         chains[self.isomer - 1] += '{=}' + chains[self.isomer]
         chains.pop(self.isomer)
 
-        return '-'.join(chains)
+        return chains
 
     def parse_to_atoms(self) -> dict[str, int]:
         return {'C': self.carbon_count, 'H': self.carbon_count * 2 - 2}
+
+
+class Alkyl:
+    ALKANE = 1
+    ALKENE = 2
+
+    def __init__(self, carbon_count: int, radical_type: int) -> None:
+        self.carbon_count = carbon_count
+        self.radical_type = radical_type
+    
+    def get_chains(self) -> list[str]:
+        picture = []
+
+        return picture
