@@ -96,12 +96,9 @@ class Alkyne:
 
 
 class Alkyl:
-    ALKANE = 1
-    ALKENE = 2
 
-    def __init__(self, carbon_count: int, radical_type: int) -> None:
+    def __init__(self, carbon_count: int) -> None:
         self.carbon_count = carbon_count
-        self.radical_type = radical_type
     
     def get_chains(self) -> list[str]:
         picture = []
