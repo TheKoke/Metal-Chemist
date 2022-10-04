@@ -1,0 +1,2 @@
+class Molecule(object):
+    pass
