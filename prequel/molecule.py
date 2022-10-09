@@ -1,4 +1,7 @@
+from __future__ import annotations
+
 from atom import Atom
+from typing import overload
 
 class Molecule(object):
     def __init__(self, name: str = str()) -> None:
@@ -7,13 +10,14 @@ class Molecule(object):
         self.atoms = list()
         self.molecular_weight = float()
     
-    def brancher(self, *args) -> None:
+    def brancher(self, *args) -> Molecule:
+        m = Molecule()
         pass
 
-    def bounder(self) -> None:
+    def bounder(self) -> Molecule:
         pass
 
-    def mutate(self) -> None:
+    def mutate(self) -> Molecule:
         pass
 
     def add(self) -> None:

@@ -1,4 +1,4 @@
-from atom import Atom
+from __future__ import annotations
 
 class Atom(object):
     elements = {
@@ -18,7 +18,7 @@ class Atom(object):
     def __init__ (self, elt: str, id_: int):
         self.element = elt
         self.id = id_
-        self.neighrs = []
+        self.neighrs = list()
         
     def get_weight(self) -> float:
         return Atom.elements[self.element][1]
@@ -29,11 +29,16 @@ class Atom(object):
     def add_neighrs(self, elt: Atom) -> None:
         pass
 
-    def __hash__(self):      
+    def __hash__(self) -> int:      
         return self.id
     
-    def __eq__(self, other): 
+    def __eq__(self, other: Atom) -> bool: 
         return self.id == other.id
 
-    def __str__(self):
-        pass
+    def __str__(self) -> str:
+        format = f'Atom({self.element}.{self.id}'
+        if len(self.neighrs) == 0:
+            return format + ')'
+
+        format += ': '
+        return format + ','.join([f'{self.neighrs[i]}.{self.neighrs[i].id}' for i in range(len(self.neighrs))]) + ')'
