@@ -26,8 +26,12 @@ class Atom(object):
     def get_valence(self) -> int:
         return Atom.elements[self.element][0]
 
-    def add_neighrs(self, elt: Atom) -> None:
-        pass
+    def add_neighrs(self, elt: Atom) -> bool:
+        if len(self.neighrs) == self.get_valence():
+            return False
+
+        self.neighrs.append(elt)
+        return True
 
     def __hash__(self) -> int:      
         return self.id
@@ -42,3 +46,15 @@ class Atom(object):
 
         format += ': '
         return format + ','.join([f'{self.neighrs[i]}.{self.neighrs[i].id}' for i in range(len(self.neighrs))]) + ')'
+        
+
+class Bound(object):
+    def __init__(self, carbon: int) -> None:
+        self.carbon = carbon
+        self.atoms = [Atom('C', i + 1) for i in range(carbon)]
+
+    def fill(self) -> bool:
+        pass
+
+    def erase(self) -> bool:
+        pass
