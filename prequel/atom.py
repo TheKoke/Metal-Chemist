@@ -48,13 +48,17 @@ class Atom(object):
         return format + ','.join([f'{self.neighrs[i]}.{self.neighrs[i].id}' for i in range(len(self.neighrs))]) + ')'
         
 
-class Bound(object):
+class Brancher(object):
     def __init__(self, carbon: int) -> None:
         self.carbon = carbon
         self.atoms = [Atom('C', i + 1) for i in range(carbon)]
 
     def fill(self) -> bool:
-        pass
+        for i in range(len(self.atoms)):
+            while self.atoms[i].add_neighrs('H'):
+                continue
 
     def erase(self) -> bool:
-        pass
+        for i in range(len(self.atoms)):
+            while self.atoms[i].neighrs.count('H') > 0:
+                self.atoms[i].neighrs.remove('H')
