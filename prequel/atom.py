@@ -48,13 +48,23 @@ class Atom(object):
         return format + ','.join([f'{self.neighrs[i]}.{self.neighrs[i].id}' for i in range(len(self.neighrs))]) + ')'
         
 
-class Bound(object):
-    def __init__(self, carbon: int) -> None:
+class Bound:
+    def __init__(self, carbon: int, id: int) -> None:
         self.carbon = carbon
         self.atoms = [Atom('C', i + 1) for i in range(carbon)]
+        self.id = id
+        self.locked = False
 
-    def fill(self) -> bool:
-        pass
+    def fill(self) -> None:
+        for atom in self.atoms:
+            temp = True
+            while temp:
+                temp = atom.add_neighrs(Atom('H', 1))
 
-    def erase(self) -> bool:
+    def erase(self) -> None:
+        for atom in self.atoms:
+            while "H" in atom.neighrs:
+                atom.neighrs.remove("H")
+
+    def merger(self, another: Bound, elt1: int, elt2: int) -> bool:
         pass

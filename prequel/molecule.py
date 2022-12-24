@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 from atom import Atom, Bound
-from errors import EmptyMolecule, LockedMolecule, UnlockedMolecule, InvalidBond
+from errors import *
 
 class Molecule(object):
     def __init__(self, name: str = str()) -> None:
@@ -9,31 +9,38 @@ class Molecule(object):
 
         self.locked = False
         self.formula = str()
-        self.bounds = list()
-        self.atoms = list()
+        self.bounds: list[Bound] = list()
+        self.atoms: list[Atom] = list()
         self.molecular_weight = float()
-
-    def refresh(self) -> None:
-        pass
 
     def get_formula(self):
         dict_atoms = dict()
         pass
     
     def brancher(self, *args: list[int]) -> Molecule:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be unlocked before change them')
         m = Molecule()
         pass
 
     def bounder(self, *args: list[tuple[int]]) -> Molecule:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be unlocked before change them')
         pass
 
     def mutate(self, *args: list[tuple[int]]) -> Molecule:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be unlocked before change them')
         pass
 
     def add(self) -> None:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be unlocked before change them')
         pass
 
     def add_chaining(self) -> None:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be unlocked before change them')
         pass
 
     def closer(self) -> None:
@@ -41,14 +48,10 @@ class Molecule(object):
         for i in range(len(self.bounds)):
             self.bounds[i].fill()
 
-        self.refresh()
-
     def unlock(self) -> None:
         self.locked = False
         for i in range(len(self.bounds)):
             self.bounds[i].erase()
-
-        self.refresh()
 
     def calculate_molecular_weight(self) -> float:
         if not self.locked:
