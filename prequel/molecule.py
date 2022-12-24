@@ -7,7 +7,9 @@ class Molecule(object):
     def __init__(self, name: str = str()) -> None:
         self.name = name
 
-        self.locked = False
+        self.__locked = False
+        self.__branchers = list()
+
         self.formula = str()
         self.bounds: list[Bound] = list()
         self.atoms: list[Atom] = list()
@@ -44,17 +46,30 @@ class Molecule(object):
         pass
 
     def closer(self) -> None:
+        if self.__locked:
+            raise LockedMolecule('Molecule is locked.')
+
         self.locked = True
         for i in range(len(self.bounds)):
             self.bounds[i].fill()
 
     def unlock(self) -> None:
+        if not self.__locked:
+            raise UnlockedMolecule('Molecule already unlock.')
+
         self.locked = False
         for i in range(len(self.bounds)):
-            self.bounds[i].erase()
+            self.__branchers[i].erase()
 
     def calculate_molecular_weight(self) -> float:
         if not self.locked:
             raise LockedMolecule('Molecule must be locked before get their weight')
         
         return sum([list(self.atoms)[i].get_weight() for i in range(len(list(self.atoms)))])
+
+    def __get_formula(self) -> str:
+        if not self.__locked:
+            raise UnlockedMolecule('Molecule must be locked before get their formula.')
+
+    def __count_atoms(self) -> None:
+        pass
