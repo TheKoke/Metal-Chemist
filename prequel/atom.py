@@ -48,7 +48,7 @@ class Atom(object):
         return format + ','.join([f'{self.neighrs[i]}.{self.neighrs[i].id}' for i in range(len(self.neighrs))]) + ')'
         
 
-class Bound:
+class Brancher:
     def __init__(self, carbon: int, id: int) -> None:
         self.carbon = carbon
         self.atoms = [Atom('C', i + 1) for i in range(carbon)]
@@ -66,5 +66,5 @@ class Bound:
             while "H" in atom.neighrs:
                 atom.neighrs.remove("H")
 
-    def merger(self, another: Bound, elt1: int, elt2: int) -> bool:
+    def merger(self, another: Brancher, elt1: int, elt2: int) -> bool:
         pass
