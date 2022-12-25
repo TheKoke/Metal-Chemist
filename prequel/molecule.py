@@ -23,12 +23,19 @@ class Molecule(object):
         if self.locked:
             raise LockedMolecule('Molecule must be unlocked before change them')
 
+        for i in range(len(args)):
+            self.branchers.append(Brancher(args[i], i + 1))
+
         return self
 
     def bounder(self, *args: list[tuple[int]]) -> Molecule:
         if self.locked:
             raise LockedMolecule('Molecule must be unlocked before change them')
         
+        for i in range(len(args)):
+            c1: int = args[i][0]; b1: int = args[i][1]
+            c2: int = args[i][2]; b2: int = args[i][3]
+            self.branchers[b1].merger(self.branchers[b2], c1, c2)
 
         return self
 
@@ -36,6 +43,9 @@ class Molecule(object):
         if self.locked:
             raise LockedMolecule('Molecule must be unlocked before change them')
         
+        for i in range(len(args)):
+            nc: int = args[i][0]; nb: int = args[i][1]; elt: str = args[i][2]
+            self.branchers[nb].mutate(nc, Atom(elt, 1))
 
         return self
 

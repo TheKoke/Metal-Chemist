@@ -68,3 +68,6 @@ class Brancher:
 
     def merger(self, another: Brancher, elt1: int, elt2: int) -> bool:
         pass
+
+    def mutate(self, index: int, elt: Atom) -> None:
+        pass
