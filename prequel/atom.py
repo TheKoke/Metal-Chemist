@@ -45,29 +45,37 @@ class Atom(object):
             return format + ')'
 
         format += ': '
-        return format + ','.join([f'{self.neighrs[i]}.{self.neighrs[i].id}' for i in range(len(self.neighrs))]) + ')'
+        return format + ', '.join([f'{self.neighrs[i]}' for i in range(len(self.neighrs))]) + ')'
         
 
-class Brancher:
-    def __init__(self, carbon: int, id: int) -> None:
-        self.carbon = carbon
-        self.atoms = [Atom('C', i + 1) for i in range(carbon)]
-        self.id = id
-        self.locked = False
+# class Brancher:
+#     def __init__(self, carbon: int, id: int) -> None:
+#         self.carbon = carbon
+#         self.atoms = [Atom('C', i + 1) for i in range(carbon)]
+#         self.id = id
+#         self.locked = False
 
-    def fill(self) -> None:
-        for atom in self.atoms:
-            temp = True
-            while temp:
-                temp = atom.add_neighrs(Atom('H', 1))
+#     def fill(self) -> None:
+#         for atom in self.atoms:
+#             temp = atom.add_neighrs(Atom('H', 1))
+#             while temp:
+#                 self.atoms.append(Atom('H', 1))
+#                 temp = atom.add_neighrs(Atom('H', 1))
 
-    def erase(self) -> None:
-        for atom in self.atoms:
-            while "H" in atom.neighrs:
-                atom.neighrs.remove("H")
+#     def erase(self) -> None:
+#         for atom in self.atoms:
+#             while "H" in atom.neighrs:
+#                 atom.neighrs.remove("H")
 
-    def merger(self, another: Brancher, elt1: int, elt2: int) -> bool:
-        pass
+#     def merger(self, another: Brancher, elt1: int, elt2: int) -> bool:
+#         if elt1 >= len(self.atoms) or elt2 >= len(another.atoms):
+#             return False
 
-    def mutate(self, index: int, elt: Atom) -> None:
-        pass
+#         if len(self.atoms[elt1].neighrs) == self.atoms[elt1].get_valence() \
+#         or len(another.atoms[elt2].neighrs) == another.atoms[elt2].get_valence():
+#             return False
+
+#         self.atoms[elt1].add_neighrs(Atom(another.atoms[elt2], len(another.atoms) + 1))
+#         another.atoms[elt2].add_neighrs(Atom(self.atoms[elt1], len(self.atoms) + 1))
+
+#         return True
