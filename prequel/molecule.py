@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from atom import Atom, Brancher
+from atom import Atom
 from errors import *
 
 class Molecule(object):
@@ -8,18 +8,57 @@ class Molecule(object):
         self.name = name
 
         self.locked = False
-
-        self.formula = str()
         self.__branchers: list[list[Atom]] = list()
-        self.atoms: list[Atom] = list()
-        self.molecular_weight = float()
+
+    @property
+    def formula(self) -> str:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be locked before get them formula')
+
+        dict_atoms = self.__count_atoms()
+
+        picture = ''
+
+        for element in Atom.elements:
+            if element in dict_atoms:
+                count = dict_atoms[element]
+                if count == 1: picture += element
+                else: picture += element + f'{count}'
+
+        return picture
+    
+    @property
+    def atoms(self) -> list[Atom]:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be locked before get their atoms')
+
+        result = []
+
+        id_counter = 1
+        for i in range(len(self.__branchers)):
+            for atom in self.__branchers[i]:
+                if atom.element != 'C':
+                    atom.id = 1
+                else:
+                    atom.id = id_counter
+                    id_counter += 1
+                result.append(atom)
+
+        return result
+
+    @property
+    def molecular_weight(self) -> float:
+        if not self.locked:
+            raise UnlockedMolecule('Molecule must be locked before get them mass')
+
+        return sum([list(self.atoms)[i].get_weight() for i in range(len(list(self.atoms)))])
     
     def brancher(self, *args: list[int]) -> Molecule:
         if self.locked:
             raise LockedMolecule('Molecule must be unlocked before change them')
 
         for i in range(len(args)):
-            self.__new_brancher(args[1])
+            self.__new_brancher(args[i])
 
         return self
 
@@ -57,18 +96,17 @@ class Molecule(object):
 
     def closer(self) -> Molecule:
         if self.locked:
-            raise LockedMolecule('Molecule is locked.')
+            raise LockedMolecule('Molecule is already locked.')
 
         self.locked = True
 
         self.__fill()
-        self.__refresh()
 
         return self
 
     def unlock(self) -> Molecule:
         if not self.locked:
-            raise UnlockedMolecule('Molecule already unlock.')
+            raise UnlockedMolecule('Molecule is already unlock.')
 
         if len(self.atoms) == 0:
             raise EmptyMolecule('WTF? Molecule has been empty')
@@ -78,25 +116,11 @@ class Molecule(object):
 
         return self
 
-    def __straighten(self) -> list[Atom]:
-        pass
-
-    def __get_formula(self) -> str:
-        dict_atoms = self.__count_atoms()
-
-    def __calculate_molecular_weight(self) -> float:
-        return sum([list(self.atoms)[i].get_weight() for i in range(len(list(self.atoms)))])
-
-    def __refresh(self) -> None:
-        if not self.locked:
-            raise UnlockedMolecule('Molecule must be locked before get info about them.')
-
-        self.atoms = self.__straighten()
-        self.formula = self.__get_formula()
-        self.molecular_weight = self.__calculate_molecular_weight()
-
     def __new_brancher(self, carbon: int) -> None:
         self.__branchers.append([Atom('C', i + 1) for i in range(carbon)])
+
+        if len(self.__branchers[-1]) == 1:
+            return
 
         for i in range(len(self.__branchers[-1])):
             if i == 0:
@@ -110,10 +134,22 @@ class Molecule(object):
                 self.__branchers[-1][i].add_neighrs(self.__branchers[-1][i - 1])
 
     def __fill(self) -> None:
-        pass
+        hydrogen = Atom('H', 1)
+        for i in range(len(self.__branchers)):
+            for j in range(len(self.__branchers[i])):
+                temp = True
+                while temp:
+                    temp = self.__branchers[i][j].add_neighrs(hydrogen)
+                    if temp:
+                        self.__branchers[i].append(hydrogen)
 
     def __erase(self) -> None:
-        pass
+        hydrogen = Atom('H', 1)
+        for i in range(len(self.__branchers)):
+            for j in range(len(self.__branchers[i])):
+                while hydrogen in self.__branchers[i][j].neighrs:
+                    self.__branchers[i][j].neighrs.remove(hydrogen)
+                    self.__branchers[i].remove(hydrogen)
 
     def __merger(self, first_branch: int, second_branch: int, pos1: int, pos2: int) -> bool:
         # if elt1 >= len(self.atoms) or elt2 >= len(another.atoms):
@@ -127,5 +163,13 @@ class Molecule(object):
         # another.atoms[elt2].add_neighrs(Atom(self.atoms[elt1], len(self.atoms) + 1))
         pass
 
-    def __count_atoms(self) -> dict[Atom, int]:
-        return {self.atoms[i] : self.atoms.count(self.atoms[i]) for i in range(len(self.atoms))}
+    def __count_atoms(self) -> dict[str, int]:
+        res = dict()
+
+        for atom in self.atoms:
+            if atom.element in res:
+                res[atom.element] += 1
+            else:
+                res[atom.element] = 1
+        
+        return res

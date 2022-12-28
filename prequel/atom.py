@@ -2,9 +2,9 @@ from __future__ import annotations
 
 class Atom(object):
     elements = {
+        'C': (4, 12.0),
         'H': (1, 1.0), 
         'B': (3, 10.8),
-        'C': (4, 12.0),
         'N': (3, 14.0),
         'O': (2, 16.0),
         'F': (1, 19.0),
